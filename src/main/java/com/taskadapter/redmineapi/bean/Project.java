@@ -11,7 +11,7 @@ import java.util.Set;
  * Redmine's Project.
  */
 public class Project implements Identifiable, Serializable {
-	private static final long serialVersionUID = 4529305420978716446L;
+    private static final long serialVersionUID = 4529305420978716446L;
 
     private final PropertyStorage storage;
 
@@ -47,11 +47,14 @@ public class Project implements Identifiable, Serializable {
      */
     public final static Property<Set<Tracker>> TRACKERS = (Property<Set<Tracker>>) new Property(Set.class, "trackers");
 
+    public final static Property<Set<String>> MODULES = (Property<Set<String>>) new Property(Set.class, "enabledModuleNames");
+
     Project(Integer id) {
         storage = new PropertyStorage();
         storage.set(DATABASE_ID, id);
         storage.set(CUSTOM_FIELDS, new HashSet<>());
         storage.set(TRACKERS, new HashSet<>());
+        storage.set(MODULES, new HashSet<>());
     }
 
     public String getHomepage() {
@@ -113,6 +116,14 @@ public class Project implements Identifiable, Serializable {
         return null;
     }
 
+    public Collection<String> getModules() {
+        return Collections.unmodifiableCollection(storage.get(MODULES));
+    }
+
+    public void addModules(Collection<String> modules) {
+        storage.get(MODULES).addAll(modules);
+    }
+
     @Override
     public String toString() {
         return "Project{" +
@@ -147,12 +158,12 @@ public class Project implements Identifiable, Serializable {
     }
 
     /**
-     * Redmine's REST API "get project" operation does NOT return the 
-     * parent project ID in redmine 1.1.2 (and maybe earlier). Which means 
+     * Redmine's REST API "get project" operation does NOT return the
+     * parent project ID in redmine 1.1.2 (and maybe earlier). Which means
      * calling getParentId() of the project loaded from Redmine server will
      * return <strong>NULL</strong> with that redmine. This bug was fixed in redmine 1.2.1.
      * See bug http://www.redmine.org/issues/8229
-     * 
+     *
      *
      * @return the parent project Id if it was set programmatically or NULL (!!!) if the project was loaded from the server.
      */
@@ -166,7 +177,7 @@ public class Project implements Identifiable, Serializable {
 
     /**
      *
-     * @return true if the project is public, false if the project is private. 
+     * @return true if the project is public, false if the project is private.
      * Returns <code>null</code> if the project visibility was not specified or if the project was just retrieved from server.
      *
      * @since Redmine 2.6.0. see http://www.redmine.org/issues/17628 . this property is for writing only before Redmine 2.6.0.
@@ -176,7 +187,7 @@ public class Project implements Identifiable, Serializable {
     public Boolean getProjectPublic() {
         return storage.get(PUBLIC);
     }
-    
+
     public void setInheritMembers(Boolean inheritMembers) {
         storage.set(INHERIT_MEMBERS, inheritMembers);
     }

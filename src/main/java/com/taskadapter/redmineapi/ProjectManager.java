@@ -49,7 +49,7 @@ public class ProjectManager {
 
     /**
      * Sample usage:
-     * 
+     *
      * <pre>
      * {@code
      * 	Project project = new Project();
@@ -72,8 +72,7 @@ public class ProjectManager {
      * @throws RedmineException
      */
     public Project createProject(Project project) throws RedmineException {
-        return transport.addObject(project, new BasicNameValuePair("include",
-                "trackers"));
+        return transport.addObject(project);
     }
 
     /**
